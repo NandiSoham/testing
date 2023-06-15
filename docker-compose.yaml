@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  frontend:
+    container_name: react-frontend
+    build: ./client/
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_DOMAIN = "dev-7mpty06oczftshr2.us.auth0.com"
+      - REACT_APP_CLIENT_ID = "yAfTGPuAVz3jPLyPislzQJKeSRVwo7hU"
+      - PORT = 3000
+    networks:
+      - mern-network
+  
+  backend:
+    container_name: express-backend
+    build: ./server/
+    restart: always
+    ports:
+      - "4000:4000"
+    depends_on:
+      - database
+    environment:
+      - MONGODB_PASS = "XInqHuIbEySHDZiY"
+      - PORT = 4000
+    networks:
+      - mern-network
+  
+  database:
+    container_name: mongodb-database
+    image: mongo
+    volumes:
+      - /home/d/triviagame-mongodb-backup:/data/db
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGODB_PASS = "XInqHuIbEySHDZiY"
+      - PORT = 4000
+    networks:
+      - mern-network
+
+volumes:
+  triviagame-mongodb-backup:
+
+networks:
+  mern-network:
+    driver: bridge
